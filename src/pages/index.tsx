@@ -10,20 +10,22 @@ type SignInFormData = {
 };
 
 const signInFormSchema = yup.object().shape({
-  email: yup.string().required('E-mail required!').email('E-mail invalid!'),
-  password: yup.string().required('Password required!'),
+  email: yup.string().required("E-mail required!").email("E-mail invalid!"),
+  password: yup.string().required("Password required!"),
 });
 
 export default function SignIn() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(signInFormSchema),
   });
 
-  const handleSignIn: SubmitHandler<SignInFormData> = (values, event) => {
+  const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     console.log(values);
   };
 
@@ -55,7 +57,13 @@ export default function SignIn() {
             {...register("password")}
           />
         </Stack>
-        <Button type="submit" marginTop="6" colorScheme="pink" size="lg">
+        <Button
+          type="submit"
+          marginTop="6"
+          colorScheme="pink"
+          size="lg"
+          isLoading={isSubmitting}
+        >
           Sign In
         </Button>
       </Flex>
