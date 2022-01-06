@@ -1,61 +1,48 @@
-import { createServer, Factory, Model } from 'miragejs';
-// import faker from 'faker';
+import { createServer, Factory, Model } from "miragejs";
+import casual from "casual-browserify";
 
-type User = { 
-  name: string
+type User = {
+  name: string;
   email: string;
   created_at: string;
-}
+};
 
-export function makeServer(){
+export function makeServer() {
   const server = createServer({
     models: {
-      user: Model.extend<Partial<User>>({})
+      user: Model.extend<Partial<User>>({}),
     },
 
     factories: {
-      /*user: Factory.extend({
-        name(i: number) {
-          return `User ${i++}`;
-        },
-        email() {
-          return faker.internet.email().toLowerCase();
-        },
-        createdAt() {
-          return faker.date.recent(10);
-        },
-      })*/
-
       user: Factory.extend({
-        name(i: number) {
-          return `User ${i++}`;
+        name() {
+          return `${casual.full_name}`;
         },
         email() {
-          return 'adasd13123@gmail.com';
+          return casual.email.toLowerCase();
         },
         createdAt() {
-          return new Date();
+          return casual.date("YYYY-MM-DD");
         },
-      })
+      }),
     },
 
-    seeds(server){
-      server.createList('user', 200);
+    seeds(server) {
+      server.createList("user", 200);
     },
 
-    routes(){
-
-      this.namespace = 'api';
+    routes() {
+      this.namespace = "api";
       this.timing = 750;
 
-      this.get('/users');
-      this.post('/users');
-      this.patch('/users');
-      this.delete('/users');
+      this.get("/users");
+      this.post("/users");
+      this.patch("/users");
+      this.delete("/users");
 
-      this.namespace = '';
+      this.namespace = "";
       this.passthrough();
-    }
+    },
   });
 
   return server;
